@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.model_selection import KFold
 
 
-def run_log_exp(
+def fit_eval_log(
     run_name: str,
     train_data: tuple,
     val_data: tuple,
@@ -12,7 +12,7 @@ def run_log_exp(
     hyper_params: dict,
 ):
     """
-    The run_log_exp function is used to train a model and log the results of each epoch in corresponding MLFlow run.
+    The fit_eval_log function is used to train a model and log the results of each epoch in corresponding MLFlow run.
     It takes in a run_name, training data, validation data, model and hyperparameters as arguments.
     The function returns the total loss for all epochs.
 
@@ -41,7 +41,7 @@ def run_log_exp(
         return total_loss
 
 
-def run_log_exp_cv(
+def fit_eval_log_cv(
     run_name: str,
     X_train: np.ndarray,
     y_train: np.ndarray,
@@ -50,7 +50,7 @@ def run_log_exp_cv(
     kf: KFold,
 ):
     """
-    The run_log_exp_cv function is used to cross validate a model and log the results of each fold in corresponding MLFlow run.
+    The fit_eval_log_cv function is used to cross validate a model and log the results of each fold in corresponding MLFlow run.
     It takes in a run_name, training data, model, hyperparameters, and kfold split as arguments.
     The function returns the mean validation loss across all folds.
 
