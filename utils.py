@@ -10,6 +10,7 @@ def fit_eval_log(
     val_data: tuple,
     model: keras.Model,
     hyper_params: dict,
+    epochs: int = 25,
 ):
     """
     The fit_eval_log function is used to train a model and log the results of each epoch in corresponding MLFlow run.
@@ -21,6 +22,7 @@ def fit_eval_log(
     :param val_data: tuple: Validation data must be in the form ([inputs], [outputs]) which matches model dimensions
     :param model: keras.Model: Keras model to use for experiment
     :param hyper_params: dict: Hyperparameters that were used to build/train the model
+    :param epochs: int: Maximum number of epochs if early stopping criteria are not met
     :return: The total validation loss for the model
     :doc-author: mcnewcp
     """
@@ -28,7 +30,7 @@ def fit_eval_log(
         history = model.fit(
             train_data[0],
             train_data[1],
-            epochs=25,
+            epochs=epochs,
             validation_data=val_data,
             callbacks=[
                 keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True)
@@ -48,6 +50,7 @@ def fit_eval_log_cv(
     model: keras.Model,
     hyper_params: dict,
     kf: KFold,
+    epochs: int = 25,
 ):
     """
     The fit_eval_log_cv function is used to cross validate a model and log the results of each fold in corresponding MLFlow run.
@@ -60,6 +63,7 @@ def fit_eval_log_cv(
     :param model: keras.Model: Keras model to be used
     :param hyper_params: dict: Dictionary of hyperparameters that were used to build the model
     :param kf: KFold: KFold object for splitting data
+    :param epochs: int: Maximum number of epochs if early stopping criteria is not met
     :return: The mean validation loss for the cross-validation
     :doc-author: mcnewcp
     """
@@ -82,7 +86,7 @@ def fit_eval_log_cv(
                 history = model.fit(
                     train_data[0],
                     train_data[1],
-                    epochs=25,
+                    epochs=epochs,
                     validation_data=val_data,
                     callbacks=[
                         keras.callbacks.EarlyStopping(
