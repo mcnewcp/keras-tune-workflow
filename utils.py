@@ -4,15 +4,16 @@ import numpy as np
 from sklearn.model_selection import KFold
 
 
-def run_log_exp(
+def fit_eval_log(
     run_name: str,
     train_data: tuple,
     val_data: tuple,
     model: keras.Model,
     hyper_params: dict,
+    epochs: int = 25,
 ):
     """
-    The run_log_exp function is used to train a model and log the results of each epoch in corresponding MLFlow run.
+    The fit_eval_log function is used to train a model and log the results of each epoch in corresponding MLFlow run.
     It takes in a run_name, training data, validation data, model and hyperparameters as arguments.
     The function returns the total loss for all epochs.
 
@@ -21,6 +22,7 @@ def run_log_exp(
     :param val_data: tuple: Validation data must be in the form ([inputs], [outputs]) which matches model dimensions
     :param model: keras.Model: Keras model to use for experiment
     :param hyper_params: dict: Hyperparameters that were used to build/train the model
+    :param epochs: int: Maximum number of epochs if early stopping criteria are not met
     :return: The total validation loss for the model
     :doc-author: mcnewcp
     """
@@ -28,7 +30,7 @@ def run_log_exp(
         history = model.fit(
             train_data[0],
             train_data[1],
-            epochs=25,
+            epochs=epochs,
             validation_data=val_data,
             callbacks=[
                 keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True)
@@ -41,16 +43,17 @@ def run_log_exp(
         return total_loss
 
 
-def run_log_exp_cv(
+def fit_eval_log_cv(
     run_name: str,
     X_train: np.ndarray,
     y_train: np.ndarray,
     model: keras.Model,
     hyper_params: dict,
     kf: KFold,
+    epochs: int = 25,
 ):
     """
-    The run_log_exp_cv function is used to cross validate a model and log the results of each fold in corresponding MLFlow run.
+    The fit_eval_log_cv function is used to cross validate a model and log the results of each fold in corresponding MLFlow run.
     It takes in a run_name, training data, model, hyperparameters, and kfold split as arguments.
     The function returns the mean validation loss across all folds.
 
@@ -60,6 +63,7 @@ def run_log_exp_cv(
     :param model: keras.Model: Keras model to be used
     :param hyper_params: dict: Dictionary of hyperparameters that were used to build the model
     :param kf: KFold: KFold object for splitting data
+    :param epochs: int: Maximum number of epochs if early stopping criteria is not met
     :return: The mean validation loss for the cross-validation
     :doc-author: mcnewcp
     """
@@ -82,7 +86,7 @@ def run_log_exp_cv(
                 history = model.fit(
                     train_data[0],
                     train_data[1],
-                    epochs=25,
+                    epochs=epochs,
                     validation_data=val_data,
                     callbacks=[
                         keras.callbacks.EarlyStopping(
