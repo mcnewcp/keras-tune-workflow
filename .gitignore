@@ -130,3 +130,6 @@ dmypy.json
 
 #mlflow logs
 mlruns/
+
+#hyperopt trials
+hp-trials/
